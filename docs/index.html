@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Feature-Extractor</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./lib/uikit/uikit.min.css">
+    <link rel="stylesheet" href="./lib/bootstrap/css/bootstrap.min.css">
+
+    <script src="./lib/ml5/ml5.min.js"></script>
+
+
+</head>
+
+<body style="zoom:70%;">
+
+    <!-- navbar -->
+    <nav class="uk-navbar-container" uk-navbar>
+        <div class="uk-navbar-left">
+            <ul class="uk-navbar-nav">
+                <li class="uk-active"><a href="#"></a></li>
+            </ul>
+        </div>
+        <div class="uk-navbar-right" style="margin-right:20px;">
+            <ul class="uk-navbar-nav">
+
+                <li><a href="#">Machine Learning: Feature Extractor</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Collaps -->
+    <ul uk-accordion="multiple: true" style="margin:30px;">
+        <li class="uk-open">
+            <a class="uk-accordion-title" href="#"></a>
+            <div class="uk-accordion-content">
+                <!-- VideoInput -->
+                <div id="video-section" class="uk-flex uk-flex-center">
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <h3 class="uk-card-title"></h3>
+                        <p>
+                            <video id="video" width="440" height="380" autoplay></video>
+                        </p>
+                        <div class="uk-alert-primary" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            <h6><span id="loading">Loading base model...</span> | <span id="videoStatus">Loading
+                                    video...</span></h6>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </li>
+        <li class="uk-open">
+            <a class="uk-accordion-title" href="#"></a>
+            <div class="uk-accordion-content uk-section-muted">
+                <!-- Collect Data -->
+                <div class="uk-section ">
+                    <div class="uk-flex uk-flex-center">
+
+                        <!-- Dataset: BLUE -->
+                        <div class="uk-card uk-card-default uk-margin-left">
+                            <!-- <div class="progress" style=" height: 40px; border-radius: 0;">
+                                <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25">25%</div>
+                            </div> -->
+                            <div class="uk-card-body">
+                                <div id="canvas-container-blue" class="canvas-container"></div>
+                            </div>
+                            <div class="uk-card-footer">
+                                <button id="blueButton" class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom"
+                                    onmousedown="inter=setInterval(takeScreenshotBlue(), 1*100);" onmouseup="clearInterval(inter);">
+                                    Blue: <span id="amountOfBlueImages">0</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Dataset: RED -->
+                        <div class="uk-card uk-card-default uk-margin-left">
+                            <!-- <div class="progress" style=" height: 40px; border-radius: 0;">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: 25%;"
+                                    aria-valuenow="25">25%</div>
+                            </div> -->
+                            <div class="uk-card-body">
+                                <div id="canvas-container-red" class="canvas-container"></div>
+                            </div>
+                            <div class="uk-card-footer">
+                                <button id="redButton" class="uk-button uk-button-danger uk-width-1-1 uk-margin-small-bottom"
+                                    onmousedown="inter=setInterval(takeScreenshotRed(), 1*100);" onmouseup="clearInterval(inter);">
+                                    RED: <span id="amountOfRedImages">0</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Dataset: BLACK -->
+                        <div class="uk-card uk-card-default uk-margin-left">
+                            <!-- <div class="progress" style=" height: 40px; border-radius: 0;">
+                                <div class="progress-bar bg-secondary" role="progressbar" style="width: 25%;"
+                                    aria-valuenow="25">25%</div>
+                            </div> -->
+                            <div class="uk-card-body">
+                                <div id="canvas-container-black" class="canvas-container"></div>
+                            </div>
+                            <div class="uk-card-footer">
+                                <button id="blackButton" class="uk-button uk-button-secondary uk-width-1-1 uk-margin-small-bottom"
+                                    onmousedown="inter=setInterval(takeScreenshotBlack(), 1*100);" onmouseup="clearInterval(inter);">
+                                    BLACK: <span id="amountOfBlackImages">0</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Training -->
+                <div class="uk-section" style="margin-top:-40px;">
+                    <div class="uk-container">
+                        <div class="uk-grid-match uk-child-width-3-2@m" uk-grid>
+                            <div>
+                                <div class="uk-card uk-card-default ">
+                                    <div class="uk-card-header">
+                                        <div class="uk-alert-warning" uk-alert>
+                                            <a class="uk-alert-close" uk-close></a>
+                                            <span id="loss">loss:</span>
+                                        </div>
+                                    </div>
+                                    <div class="uk-card-body">
+                                        <button id="train" class="uk-button uk-button-secondary uk-width-1-1 uk-margin-small-bottom">
+                                            Train
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <a class="uk-accordion-title" href="#"></a>
+            <div class="uk-accordion-content">
+                <!-- Output -->
+                <div class="uk-card uk-card-default ">
+
+                    <!-- Slider -->
+                    <!-- <div class="uk-card-body">
+                            <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1"
+                                uk-slider="clsActivated: uk-transition-active; center: true; index:0;">
+
+                                <ul class="uk-slider-items uk-grid">
+
+                                    <li uk-slider-item="0" class="uk-width-3-4">
+                                        <div class="uk-panel">
+                                            <img src="./images/blue.jpg" alt="">
+                                            <div class="uk-position-center uk-text-center">
+                                                <h1>1</h1>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li uk-slider-item="1" class="uk-width-3-4">
+                                        <div class="uk-panel">
+                                            <img id="result-image" src="./images/red.jpg" alt="">
+                                            <div class="uk-position-center uk-text-center">
+                                                <h1>2</h1>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li uk-slider-item="2" class="uk-width-3-4">
+                                        <div class="uk-panel">
+                                            <img src="./images/black.jpg" height="20px;">
+                                            <div class="uk-position-center uk-text-center">
+                                                <h1>3</h1>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <a class="uk-position-center-left uk-position-small uk-hidden-hover"
+                                    href="#" uk-slidenav-previous uk-slider-item="previous"></a>
+                                <a class="uk-position-center-right uk-position-small uk-hidden-hover"
+                                    href="#" uk-slidenav-next uk-slider-item="next"></a>
+
+                            </div>
+                        </div> -->
+
+                    <div class="uk-card-header">
+                        <div class="uk-alert-warning" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            <h2>
+                                result: <span id="result">...</span>
+                            </h2>
+                        </div>
+
+                    </div>
+                    <div class="uk-card-body">
+                        <button id="predict" class="uk-button uk-button-secondary uk-width-1-1 uk-margin-small-bottom">
+                            Test
+                        </button>
+                    </div>
+
+                </div>
+                <div class="uk-section uk-section-default">
+                    <div class="uk-flex uk-flex-center">
+
+                        <!-- <div class="uk-section" style="margin-top: -40px;">
+                            <div class="uk-container">
+                                <div class="uk-grid-match uk-child-width-3-2@m" uk-grid>
+                                    <div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+
+    <script src="./lib/uikit/uikit.min.js"></script>
+    <script src="./lib/uikit/uikit-icons.min.js"></script>
+    <script src="./lib/bootstrap/jquery/jquery-3.3.1.min.js"></script>
+    <script src="./lib/bootstrap/popper/popper.js"></script>
+    <script src="./lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="./scripts/camera.js"></script>
+    <script src="./scripts/retrain.js"></script>
+</body>
+
+
+</html>

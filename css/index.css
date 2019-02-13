@@ -1,0 +1,50 @@
+button {
+    margin: 2px;
+    padding: 4px;
+}
+
+video {
+    width: 300;
+    height: 300;
+}
+
+p {
+    display: inline;
+    font-size: 14px;
+}
+
+h6 {
+    margin: 4px;
+    font-weight: lighter;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+#video-section{
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+
+
+
+.canvas-container{
+    overflow-y: auto;
+    width: 210px;
+    height: 210px;
+    margin: 0 auto;
+    outline: black 3px solid;
+}
+
+canvas {
+    outline: black 3px solid;
+    width: 70px;
+    height: 70px;
+}
+
+#train{
+    height: 80px;
+}
+
+#predict{
+    height: 80px;
+}
