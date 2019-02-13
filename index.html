@@ -50,7 +50,7 @@
             </div>
         </li>
         <li class="uk-open">
-            <a class="uk-accordion-title" href="#">TRAINING</a>
+            <a class="uk-accordion-title" href="#">Predict</a>
             <div class="uk-accordion-content uk-section-muted">
                 <!-- Collect Data -->
                 <div class="uk-section ">
@@ -108,20 +108,22 @@
                 </div>
 
                 <!-- Training -->
-                <div class="uk-section" style="margin-top:-40px;">
+                <div class="uk-section" style="margin-top:-90px;">
                     <div class="uk-container">
                         <div class="uk-grid-match uk-child-width-3-2@m" uk-grid>
-                            <div>
+                            <div class="uk-card-body">
                                 <div class="uk-card uk-card-default ">
                                     <div class="uk-card-header">
                                         <div class="uk-alert-warning" uk-alert>
                                             <a class="uk-alert-close" uk-close></a>
-                                            <span id="loss"></span>
+                                            <h2 style="font-weight:lighter;">
+                                                It is <span id="result" style="font-weight:bold;">...</span>
+                                            </h2>
                                         </div>
                                     </div>
                                     <div class="uk-card-body">
-                                        <button id="train" class="uk-button uk-button-secondary uk-width-1-1 uk-margin-small-bottom">
-                                            Train
+                                        <button id="predict" class="uk-button uk-button-secondary uk-width-1-1 uk-margin-small-bottom">
+                                            Predict
                                         </button>
                                     </div>
                                 </div>
@@ -130,32 +132,6 @@
                     </div>
                 </div>
             </div>
-        </li>
-        <li>
-            <a class="uk-accordion-title" href="#">OUTPUT</a>
-            <div class="uk-accordion-content">
-                <!-- Output -->
-                <div class="uk-card uk-card-default ">
-                    <div class="uk-card-header">
-                        <div class="uk-alert-warning" uk-alert>
-                            <a class="uk-alert-close" uk-close></a>
-                            <h2 style="font-weight:lighter;">
-                                It is <span id="result" style="font-weight:bold;">...</span>
-                            </h2>
-                        </div>
-                    </div>
-                    <div class="uk-card-body">
-                        <button id="predict" class="uk-button uk-button-secondary uk-width-1-1 uk-margin-small-bottom">
-                            Test
-                        </button>
-                    </div>
-
-                </div>
-                <div class="uk-section uk-section-default">
-                    <div class="uk-flex uk-flex-center">
-
-                    </div>
-                </div>
             </div>
         </li>
     </ul>
@@ -163,7 +139,6 @@
 
     <script src="./scripts/retrain.js"></script>
     <script src="./scripts/camera.js"></script>
-
 </body>
 
 

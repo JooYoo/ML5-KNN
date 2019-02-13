@@ -1,4 +1,3 @@
-// document.addEventListener("DOMContentLoaded", function () {
 
 var video = document.getElementById('video');
 var videoStatus = document.getElementById('videoStatus');
@@ -11,10 +10,6 @@ var loss = document.getElementById('loss');
 var result = document.getElementById('result');
 var predict = document.getElementById('predict');
 
-
-// A variable to store the total loss
-let totalLoss = 0;
-
 // Create a webcam capture
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
@@ -23,70 +18,72 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   });
 }
 
-// Extract the already learned features from MobileNet
-// 默认课以区分两个category
-const featureExtractor = ml5.featureExtractor('MobileNet', { numClasses: 3 }, function () {
-  // const featureExtractor = ml5.featureExtractor('MobileNet', function () {
+// Extract features from MobileNet
+const knnClassifier = ml5.KNNClassifier();
+let featureExtractor = ml5.featureExtractor('MobileNet', function () {
   loading.innerText = 'Model loaded!';
-  // // Create a new classifier using those features
-  const classifier = featureExtractor.classification(video, videoReady);
-  function videoReady() {
-    videoStatus.innerText = 'Video ready!';
-  }
-
-
-  // BLUE_btn:  
-  // press to add current frame with a label of blue to the classifier
-  blueButton.onclick = function () {
-    classifier.addImage('Rock');
-    console.log('add Rock')
-  }
-
-  // RED_btn:
-  // press to add current frame with a label of red to the classifier
-  redButton.onclick = function () {
-    classifier.addImage('Scissor');
-    console.log('add Scissor')
-  }
-
-  // BLACK_btn:
-  // press to add current frame with a label of black to the classifier
-  blackButton.onclick = function () {
-    classifier.addImage('Paper');
-    console.log('add Paper')
-  }
-
-
-  // TRAIN_btn: 
-  // train the classifier with all the given images
-  train.onclick = function () {
-    classifier.train(function (lossValue) {
-      if (lossValue) {
-        console.log(lossValue);
-        totalLoss = lossValue;
-        loss.innerHTML += 'Loss: ' + totalLoss +"<br>";
-      } else {
-        loss.innerHTML += 'Done Training! Final Loss: ' + totalLoss;
-      }
-    });
-  }
-
-
-  // Show the results
-  function gotResults(err, data) {
-    // Display any error
-    if (err) {
-      console.error(err);
-    }
-    result.innerText = data;
-    classifier.classify(gotResults);
-  }
-
-  // Start predicting when the predict button is clicked
-  predict.onclick = function () {
-    classifier.classify(gotResults);
-    console.log('result')
-  }
 });
 
+// add Example
+function addExample(label) {
+  const features = featureExtractor.infer(video);
+  knnClassifier.addExample(features, label);
+}
 
+// BLUE_btn:  
+// press to add current frame with a label of blue to the classifier
+blueButton.onclick = function () {
+  addExample('Rock');
+  console.log('add Rock');
+}
+
+// RED_btn:
+// press to add current frame with a label of red to the classifier
+redButton.onclick = function () {
+  addExample('Scissor');
+  console.log('add Scissor');
+}
+
+// BLACK_btn:
+// press to add current frame with a label of black to the classifier
+blackButton.onclick = function () {
+  addExample('Paper');
+  console.log('add Paper');
+}
+
+
+//classify
+function classify() {
+  const numLabels = knnClassifier.getNumLabels();
+  if (numLabels <= 0) {
+    console.error('There is no examples in any label');
+    return;
+  }
+  const features = featureExtractor.infer(video);
+  knnClassifier.classify(features, gotResults);
+}
+
+
+// Show the results
+function gotResults(err, data) {
+  // Display any error
+  if (err) {
+    console.error(err);
+  }
+
+  //get confidence
+  if (data.confidencesByLabel) {
+    const confidences = data.confidencesByLabel; // confidences[data.label]
+  }
+
+  //
+  classify();
+  result.innerText = data.label;
+}
+
+
+// Start predicting when the predict button is clicked
+predict.onclick = function () {
+  classify();
+  console.log('result');
+}
