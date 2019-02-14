@@ -5,10 +5,14 @@ var loading = document.getElementById('loading');
 var blueButton = document.getElementById('blueButton');
 var redButton = document.getElementById('redButton');
 var blackButton = document.getElementById('blackButton');
+var progressRock = document.getElementById('progress-rock');
+var progressScissor = document.getElementById('progress-scissor');
+var progressPaper = document.getElementById('progress-paper');
 var train = document.getElementById('train');
 var loss = document.getElementById('loss');
 var result = document.getElementById('result');
 var predict = document.getElementById('predict');
+
 
 // Create a webcam capture
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -56,7 +60,7 @@ blackButton.onclick = function () {
 function classify() {
   const numLabels = knnClassifier.getNumLabels();
   if (numLabels <= 0) {
-    console.error('There is no examples in any label');
+    console.error('no examples no label');
     return;
   }
   const features = featureExtractor.infer(video);
@@ -74,6 +78,44 @@ function gotResults(err, data) {
   //get confidence
   if (data.confidencesByLabel) {
     const confidences = data.confidencesByLabel; // confidences[data.label]
+    console.log(data.label, confidences[data.label]);
+
+
+
+    switch (data.label) {
+      case "Rock":
+        progressRock.innerText = (confidences[data.label] * 100).toString() + "%";
+        progressRock.style.width = confidences[data.label] * 100 + "%";
+
+        progressScissor.innerText = (0 * 100).toString() + "%";
+        progressScissor.style.width = 0 * 100 + "%";
+        progressPaper.innerText = (0 * 100).toString() + "%";
+        progressPaper.style.width = 0 * 100 + "%";
+        break;
+
+      case "Scissor":
+        progressScissor.innerText = (confidences[data.label] * 100).toString() + "%";
+        progressScissor.style.width = confidences[data.label] * 100 + "%";
+
+        progressRock.innerText = (0 * 100).toString() + "%";
+        progressRock.style.width = 0 * 100 + "%";
+        progressPaper.innerText = (0 * 100).toString() + "%";
+        progressPaper.style.width = 0 * 100 + "%";
+        break;
+
+      case "Paper":
+        progressPaper.innerText = (confidences[data.label] * 100).toString() + "%";
+        progressPaper.style.width = confidences[data.label] * 100 + "%";
+
+        progressRock.innerText = (0 * 100).toString() + "%";
+        progressRock.style.width = 0 * 100 + "%";
+        progressScissor.innerText = (0 * 100).toString() + "%";
+        progressScissor.style.width = 0 * 100 + "%";
+        break;
+
+      default:
+        break;
+    }
   }
 
   //
