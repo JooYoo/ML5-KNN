@@ -2,9 +2,15 @@
 var video = document.getElementById('video');
 var videoStatus = document.getElementById('videoStatus');
 var loading = document.getElementById('loading');
+var blueCount = document.getElementById('amountOfBlueImages');
+var redCount = document.getElementById('amountOfRedImages');
+var blackCount = document.getElementById('amountOfBlackImages');
 var blueButton = document.getElementById('blueButton');
 var redButton = document.getElementById('redButton');
 var blackButton = document.getElementById('blackButton');
+var blueRemove = document.getElementById('span-remove-blue');
+var redRemove = document.getElementById('span-remove-red');
+var blackRemove = document.getElementById('span-remove-black');
 var progressRock = document.getElementById('progress-rock');
 var progressScissor = document.getElementById('progress-scissor');
 var progressPaper = document.getElementById('progress-paper');
@@ -12,6 +18,9 @@ var train = document.getElementById('train');
 var loss = document.getElementById('loss');
 var result = document.getElementById('result');
 var predict = document.getElementById('predict');
+var save = document.getElementById('btn-save');
+var load = document.getElementById('btn-load');
+var removeall = document.getElementById('btn-removeall');
 
 
 // Create a webcam capture
@@ -23,7 +32,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 }
 
 // Extract features from MobileNet
-const knnClassifier = ml5.KNNClassifier();
+const knnClassifier =  ml5.KNNClassifier();
 let featureExtractor = ml5.featureExtractor('MobileNet', function () {
   loading.innerText = 'Model loaded!';
 });
@@ -58,11 +67,11 @@ blackButton.onclick = function () {
 
 //classify
 function classify() {
-  const numLabels = knnClassifier.getNumLabels();
-  if (numLabels <= 0) {
-    console.error('no examples no label');
-    return;
-  }
+  // const numLabels = knnClassifier.getNumLabels();
+  // if (numLabels <= 0) {
+  //   console.error('no examples no label');
+  //   return;
+  // }
   const features = featureExtractor.infer(video);
   knnClassifier.classify(features, gotResults);
 }
@@ -78,9 +87,7 @@ function gotResults(err, data) {
   //get confidence
   if (data.confidencesByLabel) {
     const confidences = data.confidencesByLabel; // confidences[data.label]
-    console.log(data.label, confidences[data.label]);
-
-
+    // console.log(data.label, confidences[data.label]);
 
     switch (data.label) {
       case "Rock":
@@ -118,14 +125,60 @@ function gotResults(err, data) {
     }
   }
 
-  //
+  // recursion
   classify();
   result.innerText = data.label;
 }
 
 
-// Start predicting when the predict button is clicked
+// predict when the predict button is clicked
 predict.onclick = function () {
   classify();
-  console.log('result');
 }
+
+
+// save retrain dataset
+save.onclick = function () {
+  knnClassifier.save('KNNDataset');
+}
+
+// load retrain dataset
+load.onclick = function () {
+  knnClassifier.load('./Dataset/KNNDataset.json', getLabelCount)
+  load.innerText = "Load Success";
+  classify();
+}
+
+// get sample label count
+function getLabelCount() {
+  const counts = knnClassifier.getCountByLabel();
+
+  blueCount.innerText = counts['Rock'];
+  redCount.innerText = counts['Scissor'];
+  blackCount.innerText = counts['Paper'];
+}
+
+// remove all labels
+removeall.onclick=function(){
+  knnClassifier.clearAllLabels();
+  getLabelCount();
+}
+
+// remove blue
+blueRemove.onclick=function(){
+  knnClassifier.clearLabel('Rock');
+  getLabelCount();
+}
+
+// remove red
+redRemove.onclick=function(){
+  knnClassifier.clearLabel('Scissor');
+  getLabelCount();
+}
+
+// remove black
+blackRemove.onclick=function(){
+  knnClassifier.clearLabel('Paper');
+  getLabelCount();
+}
+
