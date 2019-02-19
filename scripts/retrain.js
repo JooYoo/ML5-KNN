@@ -45,23 +45,26 @@ function addExample(label) {
 
 // BLUE_btn:  
 // press to add current frame with a label of blue to the classifier
-blueButton.onclick = function () {
+function onBlueBtn () {
   addExample('Rock');
   console.log('add Rock');
+  takeScreenshotBlue();
 }
 
 // RED_btn:
 // press to add current frame with a label of red to the classifier
-redButton.onclick = function () {
+function onRedBtn () {
   addExample('Scissor');
   console.log('add Scissor');
+  takeScreenshotRed();
 }
 
 // BLACK_btn:
 // press to add current frame with a label of black to the classifier
-blackButton.onclick = function () {
+ function onBlackBtn () {
   addExample('Paper');
   console.log('add Paper');
+  takeScreenshotBlack();
 }
 
 
@@ -139,14 +142,14 @@ predict.onclick = function () {
 
 // save retrain dataset
 save.onclick = function () {
-  knnClassifier.save('KNNDataset');
+  knnClassifier.save();
 }
 
 // load retrain dataset
 load.onclick = function () {
-  knnClassifier.load('./Dataset/KNNDataset.json', getLabelCount)
+  knnClassifier.load('./Dataset/myKNN.json', getLabelCount)
   load.innerText = "Load Success";
-  classify();
+ 
 }
 
 // get sample label count
